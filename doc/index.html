@@ -8,12 +8,10 @@
   <h1>File upload</h1>
   <form ref='uploadForm' id='uploadForm' action='/upload' method='post' encType="multipart/form-data">
     <input type="file" name="sampleFile" />
-    <select name="isCript">
-      <option value="True">Crypt</option>
-      <option value="False">Decrypt</option>
-    </select>
+    <input type="radio" name="isCrypt" value="True" checked> Crypt
+    <input type="radio" name="isCrypt" value="False"> Decrypt
+    <input type="password" name="password" />
     <input type='submit' value='Upload!' />
-
   </form>
 </body>
 
