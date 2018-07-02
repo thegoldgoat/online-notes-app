@@ -1,0 +1,20 @@
+<html>
+
+<head>
+  <title>File encrypter and decrypter</title>
+</head>
+
+<body>
+  <h1>File upload</h1>
+  <form ref='uploadForm' id='uploadForm' action='/upload' method='post' encType="multipart/form-data">
+    <input type="file" name="sampleFile" />
+    <select name="isCript">
+      <option value="True">Crypt</option>
+      <option value="False">Decrypt</option>
+    </select>
+    <input type='submit' value='Upload!' />
+
+  </form>
+</body>
+
+</html>
