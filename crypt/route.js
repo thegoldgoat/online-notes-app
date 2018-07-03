@@ -19,6 +19,19 @@ function decrypt(buffer, password, algorithm) {
   return dec;
 }
 
+router.get('/sessiondemo', function (req, res) {
+  if (req.session.views) {
+    req.session.views++
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<p>views: ' + req.session.views + '</p>')
+    res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+    res.end()
+  } else {
+    req.session.views = 1
+    res.end('welcome to the session demo. refresh!')
+  }
+});
+
 // Main page
 router.get('/', function (req, res, next) {
   var fileName = __dirname + '/doc/' + 'index.html';
@@ -48,7 +61,7 @@ router.post('/upload', function (req, res) {
   wstream.write(newBuffer);
   wstream.end();
 
-  res.send("<a href='/file/" + sampleFile.name + "'>Download</a>");
+  res.send("<a href='/crypt/file/" + sampleFile.name + "'>Download</a>");
 });
 
 // File download
@@ -56,6 +69,8 @@ router.get('/file/:name', function (req, res) {
   var fileName = req.params.name;
   res.download('/tmp/' + fileName);
 });
+
+
 
 
 module.exports = router;
