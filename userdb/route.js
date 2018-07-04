@@ -12,7 +12,7 @@ router.get('/', function (req, res) {
     res.redirect('/user/myfiles');
   }
   // If it is not logged, then display the login page
-  var fileName = __dirname + '/doc/' + 'index.html';
+  var fileName = __dirname + '/views/' + 'index.html';
   res.sendFile(fileName);
 });
 
@@ -21,7 +21,8 @@ router.get('/myfiles', function (req, res) {
   // Check if session is already active
   if (!req.session.username)
     res.sendStatus(403);
-  res.send('files page!');
+  // render
+  res.render('myfiles', { username: req.session.username })
 });
 
 
@@ -32,7 +33,7 @@ function check_username_pass(username, password) {
   return true;
 }
 
-function hash_of_string(input_string, hash_algorithm='sha256') {
+function hash_of_string(input_string, hash_algorithm = 'sha256') {
   var hash = crypto.createHash('sha256');
   hash.update(input_string);
   return hash.digest('hex');
