@@ -9,7 +9,7 @@ var router = express.Router();
 router.get('/', function (req, res) {
   // Check if session is already active
   if (req.session.username) {
-    res.redirect('/user/myfiles');
+    res.redirect('/user/mynotes');
   }
   // If it is not logged, then display the login page
   var fileName = __dirname + '/views/' + 'index.html';
@@ -17,12 +17,12 @@ router.get('/', function (req, res) {
 });
 
 // Files page
-router.get('/myfiles', function (req, res) {
+router.get('/mynotes', function (req, res) {
   // Check if session is already active
   if (!req.session.username)
     res.sendStatus(403);
   // render
-  res.render('myfiles', { username: req.session.username })
+  res.render('mynotes', { username: req.session.username })
 });
 
 
@@ -40,12 +40,19 @@ function hash_of_string(input_string, hash_algorithm = 'sha256') {
 }
 
 // Database schemas
+// * User
 var userAuthSchema = mongoose.Schema({
   username: String,
   password: String
 });
-// Database model
 var userAuthModel = mongoose.model('userAuth', userAuthSchema);
+// * Note
+var noteSchema = mongoose.Schema({
+  owner: String,
+  title: String,
+  text: String
+});
+var noteModel = mongoose.model('note', noteSchema);
 
 // Sign in
 router.post('/signin', function (req, res) {
@@ -78,7 +85,7 @@ router.post('/signin', function (req, res) {
           return res.sendStatus(500);
         }
         req.session.username = username;
-        return res.redirect('/user/myfiles');
+        return res.redirect('/user/mynotes');
       });
     }
   });
@@ -106,7 +113,7 @@ router.post('/login', function (req, res) {
 
     // If it is found,
     req.session.username = found.username;
-    return res.redirect('/user/myfiles');
+    return res.redirect('/user/mynotes');
   })
 });
 
@@ -114,6 +121,18 @@ router.post('/login', function (req, res) {
 router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/user');
+});
+
+// New note receiver
+router.post('/newnote', function (req, res) {
+  // Quit if not authenticated or are missing some Things<
+  if (!req.session.username || !req.body.title || !req.body.text)
+    return res.sendStatus(403);
+  // Send the note to the database
+  newNote = new noteModel({ owner: req.session.username, title: req.body.title, text: req.body.text });
+  newNote.save();
+  console.log('Added note to the database for user ' + req.session.username);
+  res.sendStatus(200);
 });
 
 module.exports = router;

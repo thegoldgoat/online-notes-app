@@ -1,0 +1,62 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myfiles</title>
+
+  <script type="text/javascript">
+    function createNewNote() {
+      var newnotediv = document.getElementById('newnotediv');
+      newnotediv.style = '';
+    }
+
+    function hideNewNote() {
+      document.getElementById('newnotediv').style.display = 'none';
+      document.getElementById('newnotetitle').value = '';
+      document.getElementById('newnotetext').value = '';
+    }
+
+    function sendNewNote() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", '/user/newnote', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send('title=' + document.getElementById('newnotetitle').value + '&text=' + document.getElementById('newnotetext').value
+      );
+    }
+  </script>
+</head>
+
+<body class="w3-container">
+  <div class="w3-bar w3-black">
+    <div class="w3-bar-item w3-mobile">
+      Welcome
+      <%= username %>
+    </div>
+    <button onclick="createNewNote()" class="w3-bar-item w3-button w3-mobile">New note</button>
+    <a class="w3-bar-item w3-button w3-mobile" href="/user/logout">Logout</a>
+  </div>
+
+  <div id="newnotediv" class="w3-panel w3-display-container" style="display: none;">
+    <div class="w3-container w3-blue">
+      <h2>Input Form</h2>
+    </div>
+    <div class="w3-container w3-card">
+      <form action="javascript:sendNewNote(); hideNewNote();">
+        <p>
+          <label>Title</label>
+          <input class="w3-input" type="text" placeholder="Title" id='newnotetitle'>
+        </p>
+        <p>
+          <input class="w3-input" type="text" placeholder="Text" id="newnotetext">
+        </p>
+        <input type="submit" class="w3-button w3-green">
+        <span onclick="hideNewNote()" class="w3-button w3-red">Cancel</span>
+      </form>
+
+    </div>
+  </div>
+  <p class="w3-card">Canex</p>
+</body>
+
+</html>
