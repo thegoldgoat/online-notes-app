@@ -24,11 +24,36 @@
       xhr.send('title=' + document.getElementById('newnotetitle').value + '&text=' + document.getElementById('newnotetext').value
       );
     }
+
+    function addReceivedNote(note) {
+      // * Create a new note node
+      // New note div
+      var newNote = document.createElement('div');
+      newNote.setAttribute('class', 'w3-card-4 w3-panel w3-sand');
+
+      // Title node word-wrap: break-word;
+      var title = document.createElement('b');
+      title.style.wordWrap = 'break-word';
+      title.setAttribute('class', 'w3-xxlarge');
+      title.appendChild(document.createTextNode(note.title));
+
+      // Text node
+      var text = document.createElement('div');
+      text.style.wordWrap = 'break-word';
+      text.innerHTML = note.text;
+
+      // Append to newnote
+      newNote.appendChild(title);
+      newNote.appendChild(text);
+
+      // append to document
+      document.getElementById('mynotes').appendChild(newNote);
+    }
   </script>
 </head>
 
-<body class="w3-container">
-  <div class="w3-bar w3-black">
+<body>
+  <div class="w3-bar w3-black w3-container">
     <div class="w3-bar-item w3-mobile">
       Welcome
       <%= username %>
@@ -56,7 +81,9 @@
 
     </div>
   </div>
-  <p class="w3-card">Canex</p>
+
+  <div id="mynotes" class="w3-container"></div>
+
 </body>
 
 </html>
