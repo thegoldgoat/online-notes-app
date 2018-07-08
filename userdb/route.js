@@ -140,8 +140,10 @@ router.post('/newnote', function (req, res) {
 
 // Notes updater
 router.get('/updatenotes', function (req, res) {
+  if (!req.session.username)
+    return res.sendStatus(403);
   // Query every note with greather than update_time
-  var results = noteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, function (err, result) {
+  noteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, function (err, result) {
     if (err)
       return res.sendStatus(500);
     req.session.knownTime = Date.now();
@@ -151,6 +153,24 @@ router.get('/updatenotes', function (req, res) {
     });
     return res.send(JSON.stringify(returnJson));
   });
+});
+
+// Note remover
+router.post('/delnote', function (req, res) {
+  console.log('delnote');
+
+  if (!req.session.username)
+    return res.sendStatus(403);
+  var targetID = req.body.id;
+  noteModel.findOneAndDelete({ _id: targetID, owner: req.session.username}, function (err, found) {
+    if (err)
+      return res.sendStatus(500);
+    if (found) {
+      console.log('Note removed for ' + req.session.username);
+      return res.sendStatus(200);
+    }
+    return res.sendStatus(404);
+  })
 });
 
 module.exports = router;

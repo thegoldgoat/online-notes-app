@@ -43,20 +43,47 @@
       text.style.wordWrap = 'break-word';
       text.innerHTML = note.text;
 
+      // Buttons
+      var updateBut = document.createElement('button');
+      updateBut.setAttribute('class', 'w3-button w3-yellow');
+      updateBut.setAttribute('onclick', 'updateButtonClick("' + note.id + '");');
+      updateBut.innerHTML = 'Modify';
+
+      var removeBut = document.createElement('button');
+      removeBut.setAttribute('class', 'w3-button w3-red');
+      removeBut.setAttribute('onclick', 'deleteButtonClick("' + note.id + '");');
+      removeBut.innerHTML = 'Delete';
+
+
       // Append to newnote
       newNote.appendChild(title);
       newNote.appendChild(text);
+      newNote.appendChild(updateBut);
+      newNote.appendChild(removeBut);
 
       // append to document
       document.getElementById('mynotes').appendChild(newNote);
     }
+
+    function updateButtonClick(id){
+      // TODO: show apply button and inputs instead of text
+    }
+
+    function deleteButtonClick(id) {
+      var node = document.getElementById(id);
+      node.parentNode.removeChild(node);
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", '/user/delnote', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send('id=' + id);
+    }
+
   </script>
   <script>
     const lookForNewNoteTimeout = 1000;
 
     function parseUpdate(jsonData) {
       // Parse the json update data
-      console.log(jsonData);
       jsonData.updates.forEach(update => {
         // Look for that ID in your page
         var element = document.getElementById(update.id);
@@ -71,8 +98,6 @@
 
     // Background script
     function updateNotes() {
-      console.log('Update notes triggered!');
-
       // Query for changes as a json
       var xhr = new XMLHttpRequest();
 
