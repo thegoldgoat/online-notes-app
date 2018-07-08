@@ -145,7 +145,6 @@ router.get('/updatenotes', function (req, res) {
     if (err)
       return res.sendStatus(500);
     req.session.knownTime = Date.now();
-    console.log(result);
     var returnJson = { updates: [] };
     result.forEach(element => {
       returnJson.updates.push({ title: element.title, text: element.text, id: element._id });

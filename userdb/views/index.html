@@ -2,10 +2,12 @@
 
 <head>
   <title>File encrypter and decrypter</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <h1>Sign in</h1>
+  <!-- <h1>Sign in</h1>
   <form method='post' action="/user/signin">
     <input type="text" placeholder="Username" name="username">
     <input type="password" placeholder="Password" name="password">
@@ -16,8 +18,47 @@
   <form method='post' action="/user/login">
     <input type="text" placeholder="Username" name="username">
     <input type="password" placeholder="Password" name="password">
-    <input type="submit">    
-  </form>
+    <input type="submit">
+  </form> -->
+
+  <div class="w3-panel w3-display-container">
+    <div class="w3-container w3-blue">
+      <h2>Sign in</h2>
+    </div>
+    <div class="w3-container w3-card">
+      <form method='post' action="/user/signin">
+        <p>
+          <label>Title</label>
+          <input class="w3-input" type="text" placeholder="Username" name='username'>
+        </p>
+        <p>
+          <input class="w3-input" type="password" placeholder="Password" name="password">
+        </p>
+        <input type="submit" class="w3-button w3-green">
+      </form>
+
+    </div>
+  </div>
+
+  <div class="w3-panel w3-display-container">
+      <div class="w3-container w3-green">
+        <h2>Log in</h2>
+      </div>
+      <div class="w3-container w3-card">
+        <form method='post' action="/user/login">
+          <p>
+            <label>Title</label>
+            <input class="w3-input" type="text" placeholder="Username" name='username'>
+          </p>
+          <p>
+            <input class="w3-input" type="password" placeholder="Password" name="password">
+          </p>
+          <input type="submit" class="w3-button w3-green">
+        </form>
+  
+      </div>
+    </div>
+
 </body>
 
 </html>
