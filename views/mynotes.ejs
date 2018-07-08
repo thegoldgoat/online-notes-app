@@ -30,6 +30,7 @@
       // New note div
       var newNote = document.createElement('div');
       newNote.setAttribute('class', 'w3-card-4 w3-panel w3-sand');
+      newNote.setAttribute('id', note.id);
 
       // Title node word-wrap: break-word;
       var title = document.createElement('b');
@@ -49,6 +50,44 @@
       // append to document
       document.getElementById('mynotes').appendChild(newNote);
     }
+  </script>
+  <script>
+    const lookForNewNoteTimeout = 1000;
+
+    function parseUpdate(jsonData) {
+      // Parse the json update data
+      console.log(jsonData);
+      jsonData.updates.forEach(update => {
+        // Look for that ID in your page
+        var element = document.getElementById(update.id);
+        if (element == null) {
+          // Brand new, add to top
+          addReceivedNote(update);
+        } else {
+          // Update previously generated
+        }
+      });
+    }
+
+    // Background script
+    function updateNotes() {
+      console.log('Update notes triggered!');
+
+      // Query for changes as a json
+      var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var updatejson = JSON.parse(this.responseText);
+          parseUpdate(updatejson);
+        }
+      };
+      xhr.open("GET", '/user/updatenotes', true);
+      xhr.send();
+    }
+
+    updateNotes();
+    let timerId = setInterval(updateNotes, lookForNewNoteTimeout);
   </script>
 </head>
 

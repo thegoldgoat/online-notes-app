@@ -16,11 +16,13 @@ router.get('/', function (req, res) {
   res.sendFile(fileName);
 });
 
-// Files page
+// Notes page
 router.get('/mynotes', function (req, res) {
   // Check if session is already active
   if (!req.session.username)
     res.sendStatus(403);
+  // Set client known to 0
+  req.session.knownTime = 0;
   // render
   res.render('mynotes', { username: req.session.username })
 });
@@ -50,7 +52,8 @@ var userAuthModel = mongoose.model('userAuth', userAuthSchema);
 var noteSchema = mongoose.Schema({
   owner: String,
   title: String,
-  text: String
+  text: String,
+  last_update: Date
 });
 var noteModel = mongoose.model('note', noteSchema);
 
@@ -129,10 +132,26 @@ router.post('/newnote', function (req, res) {
   if (!req.session.username || !req.body.title || !req.body.text)
     return res.sendStatus(403);
   // Send the note to the database
-  newNote = new noteModel({ owner: req.session.username, title: req.body.title, text: req.body.text });
+  newNote = new noteModel({ owner: req.session.username, title: req.body.title, text: req.body.text, last_update: Date.now() });
   newNote.save();
   console.log('Added note to the database for user ' + req.session.username);
   res.sendStatus(200);
+});
+
+// Notes updater
+router.get('/updatenotes', function (req, res) {
+  // Query every note with greather than update_time
+  var results = noteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, function (err, result) {
+    if (err)
+      return res.sendStatus(500);
+    req.session.knownTime = Date.now();
+    console.log(result);
+    var returnJson = { updates: [] };
+    result.forEach(element => {
+      returnJson.updates.push({ title: element.title, text: element.text, id: element._id });
+    });
+    return res.send(JSON.stringify(returnJson));
+  });
 });
 
 module.exports = router;
