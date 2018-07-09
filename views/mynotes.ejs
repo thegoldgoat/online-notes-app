@@ -84,6 +84,9 @@
       xhr.open("POST", '/user/sendupdatednote', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.send('id=' + id + '&' + 'title=' + titleValue + '&' + 'text=' + textValue);
+
+      // Remove that node
+      noteDiv.parentElement.removeChild(noteDiv);
     }
 
     function cancelUpdateNote(id) {
@@ -169,6 +172,8 @@
           addReceivedNote(update);
         } else {
           // Update previously generated
+          element.children[0].innerText = update.title;
+          element.children[1].innerText = update.text;
         }
       });
     }
