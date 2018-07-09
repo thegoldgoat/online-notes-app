@@ -74,7 +74,16 @@
     }
 
     function sendUpdateNote(id) {
-      // TODO: Send the updated note to the database
+      // Send the updated note to the database
+      var noteDiv = document.getElementById(id);
+
+      var titleValue = noteDiv.children[0].value;
+      var textValue = noteDiv.children[1].value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", '/user/sendupdatednote', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send('id=' + id + '&' + 'title=' + titleValue + '&' + 'text=' + textValue);
     }
 
     function cancelUpdateNote(id) {

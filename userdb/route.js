@@ -139,7 +139,7 @@ router.post('/newnote', function (req, res) {
   res.sendStatus(200);
 });
 
-// Notes updater
+// Notes live update to client
 router.get('/updatenotes', function (req, res) {
   if (!req.session.username)
     return res.sendStatus(403);
@@ -154,6 +154,22 @@ router.get('/updatenotes', function (req, res) {
     });
     return res.send(JSON.stringify(returnJson));
   });
+});
+
+// Note updater from client
+router.post('/sendupdatednote', function (req, res) {
+  if (!req.session.username)
+    return res.sendStatus(403);
+  var noteID = req.body.id;
+  console.log(req.body);
+  noteModel.findOneAndUpdate({ _id: noteID, owner: req.session.username },
+    { $set: { title: req.body.title, text: req.body.text, last_update: Date.now() } }, function (err, found) {
+      if (err)
+        return res.sendStatus(500);
+      if (!found)
+        return res.sendStatus(404);
+      return res.sendStatus(200);
+    });
 });
 
 // Note remover
