@@ -65,7 +65,7 @@ router.post('/signin', function (req, res) {
   var password = req.body.password;
 
   if (!check_username_pass(username, password))
-    res.sendStatus(400);
+    return res.sendStatus(400);
 
   password = hash_of_string(password);
 
@@ -102,7 +102,7 @@ router.post('/login', function (req, res) {
   var password = req.body.password;
 
   if (!check_username_pass(username, password))
-    res.sendStatus(400);
+    return res.sendStatus(400);
 
   password = hash_of_string(password);
 
