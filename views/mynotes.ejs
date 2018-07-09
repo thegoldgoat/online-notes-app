@@ -44,6 +44,7 @@
       text.innerHTML = note.text;
 
       // Buttons
+      var buttonsP = document.createElement('p');
       var updateBut = document.createElement('button');
       updateBut.setAttribute('class', 'w3-button w3-yellow');
       updateBut.setAttribute('onclick', 'updateButtonClick("' + note.id + '");');
@@ -54,18 +55,19 @@
       removeBut.setAttribute('onclick', 'deleteButtonClick("' + note.id + '");');
       removeBut.innerHTML = 'Delete';
 
+      buttonsP.appendChild(updateBut);
+      buttonsP.appendChild(removeBut);
 
       // Append to newnote
       newNote.appendChild(title);
       newNote.appendChild(text);
-      newNote.appendChild(updateBut);
-      newNote.appendChild(removeBut);
+      newNote.appendChild(buttonsP);
 
       // append to document
       document.getElementById('mynotes').appendChild(newNote);
     }
 
-    function updateButtonClick(id){
+    function updateButtonClick(id) {
       // TODO: show apply button and inputs instead of text
     }
 
@@ -79,7 +81,7 @@
     }
 
   </script>
-  <script>
+  <script type="text/javascript">
     const lookForNewNoteTimeout = 1000;
 
     function parseUpdate(jsonData) {
@@ -122,8 +124,8 @@
       Welcome
       <%= username %>
     </div>
-    <button onclick="createNewNote()" class="w3-bar-item w3-button w3-mobile">New note</button>
-    <a class="w3-bar-item w3-button w3-mobile" href="/user/logout">Logout</a>
+    <button onclick="createNewNote()" class="w3-bar-item w3-button w3-hover-green w3-mobile">New note</button>
+    <a class="w3-bar-item w3-button w3-hover-red w3-mobile" href="/user/logout">Logout</a>
   </div>
 
   <div id="newnotediv" class="w3-panel w3-display-container" style="display: none;">
