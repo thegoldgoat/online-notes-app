@@ -26,38 +26,43 @@
       );
     }
 
+    // Default note buttons
+    function returnDefaultButtons(id) {
+      var updateBut = document.createElement('button');
+      updateBut.setAttribute('class', 'w3-button w3-yellow');
+      updateBut.setAttribute('onclick', 'updateButtonClick("' + id + '");');
+      updateBut.innerHTML = 'Modify';
+
+      var removeBut = document.createElement('button');
+      removeBut.setAttribute('class', 'w3-button w3-red');
+      removeBut.setAttribute('onclick', 'deleteButtonClick("' + id + '");');
+      removeBut.innerHTML = 'Delete';
+      return { updateBut: updateBut, removeBut: removeBut };
+    }
+
+
     function addReceivedNote(note) {
       // * Create a new note node
       // New note div
       var newNote = document.createElement('div');
       newNote.setAttribute('class', 'w3-card-4 w3-panel w3-sand');
       newNote.setAttribute('id', note.id);
+      newNote.style.wordWrap = 'break-word';
 
-      // Title node word-wrap: break-word;
+      // Title node
       var title = document.createElement('b');
-      title.style.wordWrap = 'break-word';
       title.setAttribute('class', 'w3-xxlarge');
       title.appendChild(document.createTextNode(note.title));
 
       // Text node
       var text = document.createElement('div');
-      text.style.wordWrap = 'break-word';
       text.innerHTML = note.text;
 
       // Buttons
       var buttonsP = document.createElement('p');
-      var updateBut = document.createElement('button');
-      updateBut.setAttribute('class', 'w3-button w3-yellow');
-      updateBut.setAttribute('onclick', 'updateButtonClick("' + note.id + '");');
-      updateBut.innerHTML = 'Modify';
-
-      var removeBut = document.createElement('button');
-      removeBut.setAttribute('class', 'w3-button w3-red');
-      removeBut.setAttribute('onclick', 'deleteButtonClick("' + note.id + '");');
-      removeBut.innerHTML = 'Delete';
-
-      buttonsP.appendChild(updateBut);
-      buttonsP.appendChild(removeBut);
+      var defBut = returnDefaultButtons(note.id);
+      buttonsP.appendChild(defBut.updateBut);
+      buttonsP.appendChild(defBut.removeBut);
 
       // Append to newnote
       newNote.appendChild(title);
@@ -73,7 +78,25 @@
     }
 
     function cancelUpdateNote(id) {
-      // TODO: Replace the inputs with the real note's values
+      // Replace the inputs with the real note's values
+      // then replace the buttons
+      var noteDiv = document.getElementById(id);
+
+      var titleDiv = document.createElement('b');
+      titleDiv.className = 'w3-xxlarge';
+      titleDiv.innerText = backupNotes[id].title;
+      var textDiv = document.createElement('div');
+      textDiv.innerText = backupNotes[id].text;
+
+      noteDiv.replaceChild(titleDiv, noteDiv.children[0]);
+      noteDiv.replaceChild(textDiv, noteDiv.children[1]);
+
+      // Buttons
+      var defBut = returnDefaultButtons(id);
+      var buttonsP = noteDiv.children[2];
+      buttonsP.innerHTML = '';
+      buttonsP.appendChild(defBut.updateBut);
+      buttonsP.appendChild(defBut.removeBut);
     }
 
     function updateButtonClick(id) {
