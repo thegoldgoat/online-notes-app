@@ -20,8 +20,9 @@ router.get('/', function (req, res) {
 router.get('/mynotes', function (req, res) {
   // Check if session is already active
   if (!req.session.username)
-    res.sendStatus(403);
+    res.redirect('/user');
   // Set client known to 0
+  console.log('known time set to 0');
   req.session.knownTime = 0;
   // render
   res.render('mynotes', { username: req.session.username })
@@ -148,7 +149,7 @@ router.get('/updatenotes', function (req, res) {
       return res.sendStatus(500);
     req.session.knownTime = Date.now();
     var returnJson = { updates: [] };
-    result.forEach(element => {
+    result.forEach(function (element) {
       returnJson.updates.push({ title: element.title, text: element.text, id: element._id });
     });
     return res.send(JSON.stringify(returnJson));
@@ -162,7 +163,7 @@ router.post('/delnote', function (req, res) {
   if (!req.session.username)
     return res.sendStatus(403);
   var targetID = req.body.id;
-  noteModel.findOneAndDelete({ _id: targetID, owner: req.session.username}, function (err, found) {
+  noteModel.findOneAndDelete({ _id: targetID, owner: req.session.username }, function (err, found) {
     if (err)
       return res.sendStatus(500);
     if (found) {

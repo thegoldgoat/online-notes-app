@@ -19,7 +19,7 @@ var app = express();
 // default options
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'canexcaney' }));
+app.use(session({ secret: 'canexcaney', resave: false, saveUninitialized: false }));
 
 // Template engine
 app.set('view engine', 'ejs');
@@ -29,7 +29,7 @@ app.use('/crypt', cryptroute);
 const userroute = require('./userdb/route');
 app.use('/user', userroute);
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 })
 

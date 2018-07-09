@@ -6,9 +6,10 @@
   <title>Myfiles</title>
 
   <script type="text/javascript">
+    var backupNotes = new Array();
     function createNewNote() {
       var newnotediv = document.getElementById('newnotediv');
-      newnotediv.style = '';
+      newnotediv.style = 'display: block';
     }
 
     function hideNewNote() {
@@ -67,8 +68,50 @@
       document.getElementById('mynotes').appendChild(newNote);
     }
 
+    function sendUpdateNote(id) {
+      // TODO: Send the updated note to the database
+    }
+
+    function cancelUpdateNote(id) {
+      // TODO: Replace the inputs with the real note's values
+    }
+
     function updateButtonClick(id) {
-      // TODO: show apply button and inputs instead of text
+      // show apply button and inputs instead of text
+      var noteDiv = document.getElementById(id);
+      var prevTitle = noteDiv.children[0].innerHTML;
+      var prevText = noteDiv.children[1].innerHTML;
+
+      var titleInput = document.createElement('input');
+      titleInput.setAttribute('class', 'w3-input');
+      titleInput.value = prevTitle;
+
+      var textInput = document.createElement('input');
+      textInput.setAttribute('class', 'w3-input');
+      textInput.value = prevText;
+
+      // Back up note
+      backupNotes[id] = { title: prevTitle, text: prevText };
+
+      noteDiv.replaceChild(titleInput, noteDiv.children[0]);
+      noteDiv.replaceChild(textInput, noteDiv.children[1]);
+
+      // Buttons
+      var applyButton = document.createElement('button');
+      applyButton.setAttribute('class', 'w3-btn w3-green');
+      applyButton.setAttribute('onclick', 'sendUpdateNote("' + id + '");');
+      applyButton.innerText = 'Apply';
+
+      var cancelButton = document.createElement('button');
+      cancelButton.setAttribute('class', 'w3-btn w3-red');
+      cancelButton.setAttribute('onclick', 'cancelUpdateNote("' + id + '");');
+      cancelButton.innerText = 'Cancel';
+
+
+      var buttonsP = noteDiv.children[2];
+      buttonsP.innerHTML = '';
+      buttonsP.appendChild(applyButton);
+      buttonsP.appendChild(cancelButton);
     }
 
     function deleteButtonClick(id) {
