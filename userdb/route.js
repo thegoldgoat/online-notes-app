@@ -22,7 +22,6 @@ router.get('/mynotes', function (req, res) {
   if (!req.session.username)
     res.redirect('/user');
   // Set client known to 0
-  console.log('known time set to 0');
   req.session.knownTime = 0;
   // render
   res.render('mynotes', { username: req.session.username })
@@ -57,6 +56,7 @@ var noteSchema = mongoose.Schema({
   last_update: Date
 });
 var noteModel = mongoose.model('note', noteSchema);
+var deletedNoteModel = mongoose.model('deletednote', noteSchema);
 
 // Sign in
 router.post('/signin', function (req, res) {
@@ -147,12 +147,25 @@ router.get('/updatenotes', function (req, res) {
   noteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, function (err, result) {
     if (err)
       return res.sendStatus(500);
-    req.session.knownTime = Date.now();
     var returnJson = { updates: [] };
     result.forEach(function (element) {
       returnJson.updates.push({ title: element.title, text: element.text, id: element._id });
     });
-    return res.send(JSON.stringify(returnJson));
+
+    deletedNoteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, '_id', function (err, deletedResults) {
+      if (err)
+        return res.sendStatus(500);
+      req.session.knownTime = Date.now();
+      console.log(deletedResults);
+
+      if (deletedResults.length > 0) {
+        returnJson.deleted = [];
+        deletedResults.forEach(deletedElement => {
+          returnJson.deleted.push(deletedElement.id);
+        });
+      }
+      return res.send(JSON.stringify(returnJson));
+    })
   });
 });
 
@@ -161,7 +174,6 @@ router.post('/sendupdatednote', function (req, res) {
   if (!req.session.username)
     return res.sendStatus(403);
   var noteID = req.body.id;
-  console.log(req.body);
   noteModel.findOneAndUpdate({ _id: noteID, owner: req.session.username },
     { $set: { title: req.body.title, text: req.body.text, last_update: Date.now() } }, function (err, found) {
       if (err)
@@ -174,8 +186,6 @@ router.post('/sendupdatednote', function (req, res) {
 
 // Note remover
 router.post('/delnote', function (req, res) {
-  console.log('delnote');
-
   if (!req.session.username)
     return res.sendStatus(403);
   var targetID = req.body.id;
@@ -183,7 +193,10 @@ router.post('/delnote', function (req, res) {
     if (err)
       return res.sendStatus(500);
     if (found) {
+      // TODO: Better note move
       console.log('Note removed for ' + req.session.username);
+      var backup = new deletedNoteModel({ _id: found._id, owner: found.owner, title: found.title, text: found.text, last_update: Date.now() });
+      backup.save();
       return res.sendStatus(200);
     }
     return res.sendStatus(404);

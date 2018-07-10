@@ -161,7 +161,7 @@
 
   </script>
   <script type="text/javascript">
-    const lookForNewNoteTimeout = 1000;
+    const lookForNewNoteTimeout = 5000;
 
     function parseUpdate(jsonData) {
       // Parse the json update data
@@ -182,6 +182,12 @@
           }
         }
       });
+
+      if (jsonData.deleted)
+        jsonData.deleted.forEach(deletedElement => {
+          var deleteNoteDiv = document.getElementById(deletedElement);
+          deleteNoteDiv.parentNode.removeChild(deleteNoteDiv);
+        });
     }
 
     // Background script
