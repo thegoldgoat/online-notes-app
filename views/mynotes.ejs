@@ -40,7 +40,6 @@
       return { updateBut: updateBut, removeBut: removeBut };
     }
 
-
     function addReceivedNote(note) {
       // * Create a new note node
       // New note div
@@ -99,6 +98,8 @@
       titleDiv.innerText = backupNotes[id].title;
       var textDiv = document.createElement('div');
       textDiv.innerText = backupNotes[id].text;
+
+      backupNotes[id] = undefined;
 
       noteDiv.replaceChild(titleDiv, noteDiv.children[0]);
       noteDiv.replaceChild(textDiv, noteDiv.children[1]);
@@ -172,8 +173,13 @@
           addReceivedNote(update);
         } else {
           // Update previously generated
-          element.children[0].innerText = update.title;
-          element.children[1].innerText = update.text;
+          // If it is under modification, replace backup
+          if (backupNotes[update.id])
+            backupNotes[update.id] = { title: update.title, text: update.text };
+          else {
+            element.children[0].innerText = update.title;
+            element.children[1].innerText = update.text;
+          }
         }
       });
     }
