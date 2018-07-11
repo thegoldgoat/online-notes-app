@@ -147,25 +147,28 @@ router.get('/updatenotes', function (req, res) {
   noteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, function (err, result) {
     if (err)
       return res.sendStatus(500);
-    var returnJson = { updates: [] };
-    result.forEach(function (element) {
-      returnJson.updates.push({ title: element.title, text: element.text, id: element._id });
-    });
+    var returnJson = {};
+    if (result.length > 0) {
+      returnJson.updates = [];
+      result.forEach(function (element) {
+        returnJson.updates.push({ title: element.title, text: element.text, id: element._id });
+      });
+    }
 
     deletedNoteModel.find({ owner: req.session.username, last_update: { $gt: req.session.knownTime } }, '_id', function (err, deletedResults) {
       if (err)
         return res.sendStatus(500);
       req.session.knownTime = Date.now();
-      console.log(deletedResults);
-
       if (deletedResults.length > 0) {
         returnJson.deleted = [];
         deletedResults.forEach(deletedElement => {
           returnJson.deleted.push(deletedElement.id);
         });
       }
+      if (returnJson.updates === undefined && returnJson.deleted === undefined)
+        return res.sendStatus(204);
       return res.send(JSON.stringify(returnJson));
-    })
+    });
   });
 });
 

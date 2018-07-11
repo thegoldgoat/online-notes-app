@@ -161,32 +161,34 @@
 
   </script>
   <script type="text/javascript">
-    const lookForNewNoteTimeout = 5000;
+    const lookForNewNoteTimeout = 1000;
 
     function parseUpdate(jsonData) {
       // Parse the json update data
-      jsonData.updates.forEach(update => {
-        // Look for that ID in your page
-        var element = document.getElementById(update.id);
-        if (element == null) {
-          // Brand new, add to top
-          addReceivedNote(update);
-        } else {
-          // Update previously generated
-          // If it is under modification, replace backup
-          if (backupNotes[update.id])
-            backupNotes[update.id] = { title: update.title, text: update.text };
-          else {
-            element.children[0].innerText = update.title;
-            element.children[1].innerText = update.text;
+      if (jsonData.updates)
+        jsonData.updates.forEach(update => {
+          // Look for that ID in your page
+          var element = document.getElementById(update.id);
+          if (element == null) {
+            // Brand new, add to top
+            addReceivedNote(update);
+          } else {
+            // Update previously generated
+            // If it is under modification, replace backup
+            if (backupNotes[update.id])
+              backupNotes[update.id] = { title: update.title, text: update.text };
+            else {
+              element.children[0].innerText = update.title;
+              element.children[1].innerText = update.text;
+            }
           }
-        }
-      });
+        });
 
       if (jsonData.deleted)
         jsonData.deleted.forEach(deletedElement => {
           var deleteNoteDiv = document.getElementById(deletedElement);
-          deleteNoteDiv.parentNode.removeChild(deleteNoteDiv);
+          if (deleteNoteDiv)
+            deleteNoteDiv.parentNode.removeChild(deleteNoteDiv);
         });
     }
 
@@ -222,7 +224,7 @@
 
   <div id="newnotediv" class="w3-panel w3-display-container" style="display: none;">
     <div class="w3-container w3-blue">
-      <h2>Input Form</h2>
+      <h2>Create new note</h2>
     </div>
     <div class="w3-container w3-card">
       <form action="javascript:sendNewNote(); hideNewNote();">
@@ -233,7 +235,7 @@
         <p>
           <input class="w3-input" type="text" placeholder="Text" id="newnotetext">
         </p>
-        <input type="submit" class="w3-button w3-green">
+        <input type="submit" class="w3-button w3-green" value='Submit'>
         <span onclick="hideNewNote()" class="w3-button w3-red">Cancel</span>
       </form>
 
