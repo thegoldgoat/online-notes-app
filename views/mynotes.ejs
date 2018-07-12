@@ -166,7 +166,7 @@
     function parseUpdate(jsonData) {
       // Parse the json update data
       if (jsonData.updates)
-        jsonData.updates.forEach(update => {
+        jsonData.updates.forEach(function (update) {
           // Look for that ID in your page
           var element = document.getElementById(update.id);
           if (element == null) {
@@ -185,7 +185,7 @@
         });
 
       if (jsonData.deleted)
-        jsonData.deleted.forEach(deletedElement => {
+        jsonData.deleted.forEach(function (deletedElement) {
           var deleteNoteDiv = document.getElementById(deletedElement);
           if (deleteNoteDiv)
             deleteNoteDiv.parentNode.removeChild(deleteNoteDiv);
@@ -208,7 +208,7 @@
     }
 
     updateNotes();
-    let timerId = setInterval(updateNotes, lookForNewNoteTimeout);
+    var timerId = setInterval(updateNotes, lookForNewNoteTimeout);
   </script>
 </head>
 
