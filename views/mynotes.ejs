@@ -9,7 +9,7 @@
     var backupNotes = new Array();
     function createNewNote() {
       var newnotediv = document.getElementById('newnotediv');
-      newnotediv.style = 'display: block';
+      newnotediv.style.display = '';
     }
 
     function hideNewNote() {
@@ -29,12 +29,12 @@
     // Default note buttons
     function returnDefaultButtons(id) {
       var updateBut = document.createElement('button');
-      updateBut.setAttribute('class', 'w3-button w3-yellow');
+      updateBut.setAttribute('class', 'w3-btn w3-yellow');
       updateBut.setAttribute('onclick', 'updateButtonClick("' + id + '");');
       updateBut.innerHTML = 'Modify';
 
       var removeBut = document.createElement('button');
-      removeBut.setAttribute('class', 'w3-button w3-red');
+      removeBut.setAttribute('class', 'w3-btn w3-red');
       removeBut.setAttribute('onclick', 'deleteButtonClick("' + id + '");');
       removeBut.innerHTML = 'Delete';
       return { updateBut: updateBut, removeBut: removeBut };
@@ -218,7 +218,7 @@
       Welcome
       <%= username %>
     </div>
-    <button onclick="createNewNote()" class="w3-bar-item w3-button w3-hover-green w3-mobile">New note</button>
+    <button onclick="createNewNote();" class="w3-bar-item w3-button w3-hover-green w3-mobile">New note</button>
     <a class="w3-bar-item w3-button w3-hover-red w3-mobile" href="/user/logout">Logout</a>
   </div>
 
@@ -235,8 +235,8 @@
         <p>
           <input class="w3-input" type="text" placeholder="Text" id="newnotetext">
         </p>
-        <input type="submit" class="w3-button w3-green" value='Submit'>
-        <span onclick="hideNewNote()" class="w3-button w3-red">Cancel</span>
+        <input type="submit" class="w3-btn w3-green" value='Submit'>
+        <span onclick="hideNewNote()" class="w3-btn w3-red">Cancel</span>
       </form>
 
     </div>
