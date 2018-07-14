@@ -207,6 +207,11 @@
       xhr.send();
     }
 
+    // Avoid page caching
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/user/refreshnotes', false);
+    xhr.send();
+
     updateNotes();
     var timerId = setInterval(updateNotes, lookForNewNoteTimeout);
   </script>

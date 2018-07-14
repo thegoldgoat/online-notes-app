@@ -139,6 +139,13 @@ router.post('/newnote', function (req, res) {
   res.sendStatus(200);
 });
 
+router.post('/refreshnotes', function (req, res) {
+  if (!req.session.username)
+    return res.sendStatus(403);
+  req.session.knownTime = 0;
+  return res.sendStatus(200);
+})
+
 // Notes live update to client
 router.get('/updatenotes', function (req, res) {
   if (!req.session.username)
